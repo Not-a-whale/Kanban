@@ -1,0 +1,15 @@
+.done {
+    background-color: $bg-color-2;
+    grid-area: right;
+
+    &__header {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        h2 {
+            color: white;
+        }
+    }
+}
