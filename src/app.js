@@ -1,196 +1,185 @@
-import './js/Models/Task';
-import './scss/base.scss';
-import Task from './js/Models/Task';
-import * as elements from './js/base';
-import * as taskView from './js/Views/taskView';
-import * as fetched from './js/Views/fetchTasksView';
-import * as changedTask from './js/Views/changeTasksView';
+import "./js/Models/Task";
+import "./scss/base.scss";
+import Task from "./js/Models/Task";
+import * as elements from "./js/base";
+import * as taskView from "./js/Views/taskView";
+import * as fetched from "./js/Views/fetchTasksView";
+import * as changedTask from "./js/Views/changeTasksView";
 
 /* State Variabe */
 
 export const state = {
-    todo: [],
-    doing: [],
-    done: []
+  todo: [],
+  doing: [],
+  done: []
 };
 
 /* Init function */
 
 const initBoard = () => {
-    let fetchedItems = fetchFromLocalStorage();
+  let fetchedItems = fetchFromLocalStorage();
 
-    if(fetchedItems) {
-        fetchedItems.todo.forEach(el => {
-            addItem(el.title, el.id, el.class);
-        })
-        fetchedItems.doing.forEach(el => {
-            addItem(el.title, el.id, el.class);
-        })
-        fetchedItems.done.forEach(el => {
-            addItem(el.title, el.id, el.class);
-        })
-    }
-}
+  if (fetchedItems) {
+    fetchedItems.todo.forEach(el => {
+      addItem(el.title, el.id, el.class);
+    });
+    fetchedItems.doing.forEach(el => {
+      addItem(el.title, el.id, el.class);
+    });
+    fetchedItems.done.forEach(el => {
+      addItem(el.title, el.id, el.class);
+    });
+  }
+};
 
 /* Fetching Data */
 
 export const fetchFromLocalStorage = () => {
-    let obj;
+  let obj;
 
-    obj = {
-        todo: JSON.parse(localStorage.getItem("stateToDoArr")),
-        doing: JSON.parse(localStorage.getItem("stateDoingArr")),
-        done: JSON.parse(localStorage.getItem("stateDoneArr"))
-    }
+  obj = {
+    todo: JSON.parse(localStorage.getItem("stateToDoArr")),
+    doing: JSON.parse(localStorage.getItem("stateDoingArr")),
+    done: JSON.parse(localStorage.getItem("stateDoneArr"))
+  };
 
-    return obj
+  return obj;
 };
 
 /* Saving to LocalStorage */
 
 const saveToLocalStorage = () => {
-    localStorage.setItem("stateToDoArr", JSON.stringify(state.todo));
-    localStorage.setItem("stateDoingArr", JSON.stringify(state.doing));
-    localStorage.setItem("stateDoneArr", JSON.stringify(state.done));
-}
+  localStorage.setItem("stateToDoArr", JSON.stringify(state.todo));
+  localStorage.setItem("stateDoingArr", JSON.stringify(state.doing));
+  localStorage.setItem("stateDoneArr", JSON.stringify(state.done));
+};
 
 /* App controller */
 
-const addItem = function (title, id, elClass = 'todo') {
+const addItem = function(title, id, elClass = "todo") {
+  // 1) Add a new Task to the state variable
 
-    // 1) Add a new Task to the state variable
+  if (elClass === "todo") {
+    state.task = new Task(title, taskView.generateId(), elClass);
+    console.log(state.task);
+    state.todo.push(state.task);
+    saveToLocalStorage();
+  } else if (elClass === "doing") {
+    state.task = new Task(title, id, elClass);
 
-    if(elClass === 'todo') {
-        state.task = new Task(title, taskView.generateId(), elClass);
-        console.log(state.task);
-        state.todo.push(state.task);
-        saveToLocalStorage();
-    } else if (elClass === 'doing') {
-        state.task = new Task(title, id, elClass);
+    state.doing.push(state.task);
+    saveToLocalStorage();
+  } else if (elClass === "done") {
+    state.task = new Task(title, id, elClass);
 
-        state.doing.push(state.task);
-        saveToLocalStorage();
-    } else if (elClass === 'done') {
-        state.task = new Task(title, id, elClass);
+    state.done.push(state.task);
+    saveToLocalStorage();
+  }
 
-        state.done.push(state.task);
-        saveToLocalStorage();
-    }
+  // 2) Prepare the UI
 
-    // 2) Prepare the UI
+  taskView.clearInput();
 
-    taskView.clearInput();
+  // 3) Display a new Task in the UI
 
-    // 3) Display a new Task in the UI
+  console.log(state);
 
-    console.log(state);
-
-    taskView.renderTask(state.task.title, state.task.id, elClass);
-
+  taskView.renderTask(state.task.title, state.task.id, elClass);
 };
 
 const fetchItems = () => {
-    
-    fetched.asyncFetchTasks();
+  fetched.asyncFetchTasks();
 
-    let arr = fetched.fetchedResArr;
+  let arr = fetched.fetchedResArr;
 
-    for (let i = 0; i < arr.length; i++) {
-        addItem(arr[i], 1, 'todo');
-    }
-
+  for (let i = 0; i < arr.length; i++) {
+    addItem(arr[i], 1, "todo");
+  }
 };
 
-
-export const getTaskData = (eTarg) => {
-    let id, elClass;
-    if(eTarg.parentNode.parentNode.id) {
-        id = eTarg.parentNode.parentNode.id;
-        if(eTarg.parentNode.parentNode.parentNode.classList.contains('to-do')) {
-            elClass = 'todo';
-        }   else {
-            elClass = 'doing'
-        }
-        changeState(id, elClass);
+export const getTaskData = eTarg => {
+  let id, elClass;
+  if (eTarg.parentNode.parentNode.id) {
+    id = eTarg.parentNode.parentNode.id;
+    if (eTarg.parentNode.parentNode.parentNode.classList.contains("to-do")) {
+      elClass = "todo";
+    } else {
+      elClass = "doing";
     }
+    changeState(id, elClass);
+  }
 
-    if(eTarg.classList.contains('btn-danger')) {
+  if (eTarg.classList.contains("btn-danger")) {
+    changedTask.deleteItemFromUI(id);
 
-        changedTask.deleteItemFromUI(id);
-
-        deleteTask(id, elClass);
-    }
-
-}
-
+    deleteTask(id, elClass);
+  }
+};
 
 const changeState = (id, elClass) => {
-    let elem;
-    elem = removeFromState(id, elClass);
+  let elem;
+  elem = removeFromState(id, elClass);
 
-    if(elem.class === 'todo') {   
+  if (elem.class === "todo") {
     changedTask.updateUI(elem.title, elem.id, elem.class);
-    elem.class = 'doing';
-    state['doing'].push(elem);
+    elem.class = "doing";
+    state["doing"].push(elem);
     saveToLocalStorage();
-    } else if (elClass === 'doing') {
-    elem.class = 'done';
-    state['done'].push(elem);
+  } else if (elClass === "doing") {
+    elem.class = "done";
+    state["done"].push(elem);
     changedTask.updateUI(elem.title, elem.id, elem.class);
     saveToLocalStorage();
-    }
+  }
 };
 
 const removeFromState = (id, elClass) => {
-    let ids, index, elem;
+  let ids, index, elem;
 
-    ids = state[elClass].map(cur => {
-        return cur.id;
-    });
+  ids = state[elClass].map(cur => {
+    return cur.id;
+  });
 
-    if (id == '1') {
-        index = 0;
-    } else {
-        index = ids.indexOf(parseInt(10, id));
-    }
+  if (id == "1") {
+    index = 0;
+  } else {
+    index = ids.indexOf(parseInt(10, id));
+  }
 
+  if (index !== -1) {
+    elem = state[elClass].splice(index, 1)[0];
+    saveToLocalStorage();
+  }
 
-    if(index !== -1) {
-        elem = state[elClass].splice(index, 1)[0];
-        saveToLocalStorage();
-    } 
-
-    return elem;
-}
+  return elem;
+};
 
 const deleteTask = (id, elClass) => {
-    removeFromState(id, 'todo');
-    removeFromState(id, 'doing');
-    removeFromState(id, 'done');
+  removeFromState(id, "todo");
+  removeFromState(id, "doing");
+  removeFromState(id, "done");
 
-    console.log(state);
-}
+  console.log(state);
+};
 
 /* Event listeners */
 
 document.addEventListener("DOMContentLoaded", initBoard);
 
-elements.elements.task.addEventListener('click', e => {
-    e.preventDefault;
-    addItem(taskView.getInput(), 1, 'todo');
+elements.elements.task.addEventListener("click", e => {
+  e.preventDefault;
+  addItem(taskView.getInput(), 1, "todo");
 });
 
-elements.elements.fetch.addEventListener('click', fetchItems);
+elements.elements.fetch.addEventListener("click", fetchItems);
 
-elements.elements.DOMContainer.addEventListener('click', e => {
-    e.preventDefault;
-    getTaskData(e.target);
+elements.elements.DOMContainer.addEventListener("click", e => {
+  e.preventDefault;
+  getTaskData(e.target);
 });
 
-document.addEventListener("keypress", (event) => {
-    if (event.keyCode === 13 || event.which === 13) {
-        addItem(taskView.getInput(), 1, 'todo');
-    }
-  });
-
-
+document.addEventListener("keypress", event => {
+  if (event.keyCode === 13 || event.which === 13) {
+    addItem(taskView.getInput(), 1, "todo");
+  }
+});

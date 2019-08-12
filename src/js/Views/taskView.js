@@ -1,29 +1,29 @@
-import * as elements from '../base';
-import * as app from '../../app';
+import * as elements from "../base";
+import * as app from "../../app";
 
 export const getInput = () => {
-   return elements.elements.inputForm.value;
-}
+  return elements.elements.inputForm.value;
+};
 
 export const clearInput = () => {
-    elements.elements.inputForm.value = '';
-}
+  elements.elements.inputForm.value = "";
+};
 
 export const generateId = () => {
-    let ID;
+  let ID;
 
-    if(app.state.todo.length > 0) {
-        ID = app.state.todo[app.state.todo.length - 1].id + 1;
-    } else {
-        ID = 1;
-    }
+  if (app.state.todo.length > 0) {
+    ID = app.state.todo[app.state.todo.length - 1].id + 1;
+  } else {
+    ID = 1;
+  }
 
-    return ID;
-}
+  return ID;
+};
 
 export const renderTask = (title, id, elClass) => {
-    if(elClass == 'todo') {
-        let markup = `<div class="card to-do__card mt-4 mb-4" id='${id}'>
+  if (elClass == "todo") {
+    let markup = `<div class="card to-do__card mt-4 mb-4" id='${id}'>
         <div class="card-header to-do__card-header" style="font-size:18px;">
             <p class="text-primary">${title}</p>
         </div>
@@ -32,9 +32,9 @@ export const renderTask = (title, id, elClass) => {
             <button type="button" class="btn btn-danger" id="delete">Delete</button>
         </div>
         </div>`;
-        elements.elements.todoContainer.insertAdjacentHTML("beforeend", markup);
-    } else if (elClass == 'doing') {
-        let markup = `<div class="card doing__card mt-4 mb-4" id='${id}'>
+    elements.elements.todoContainer.insertAdjacentHTML("beforeend", markup);
+  } else if (elClass == "doing") {
+    let markup = `<div class="card doing__card mt-4 mb-4" id='${id}'>
         <div class="card-header to-do__card-header" style="font-size:18px;">
             <p class="text-warning">${title}</p>
         </div>
@@ -43,9 +43,9 @@ export const renderTask = (title, id, elClass) => {
             <button type="button" class="btn btn-danger" id="delete" >Delete</button>
         </div>
         </div>`;
-        elements.elements.doingContainer.insertAdjacentHTML("beforeend", markup);
-    } else if (elClass == 'done') {
-        let markup = `<div class="card done__card mt-4 mb-4" id='${id}'>
+    elements.elements.doingContainer.insertAdjacentHTML("beforeend", markup);
+  } else if (elClass == "done") {
+    let markup = `<div class="card done__card mt-4 mb-4" id='${id}'>
         <div class="card-header to-do__card-header" style="font-size:18px;">
             <p class="text-success">${title}</p>
         </div>
@@ -54,7 +54,6 @@ export const renderTask = (title, id, elClass) => {
             <button type="button" class="btn btn-danger delete" id="delete">Delete</button>
         </div>
         </div>`;
-        elements.elements.doneContainer.insertAdjacentHTML("beforeend", markup);
-    }
-
-}
+    elements.elements.doneContainer.insertAdjacentHTML("beforeend", markup);
+  }
+};
