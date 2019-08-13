@@ -32,7 +32,7 @@
         width: 40%; } }
 
 .to-do {
-  background-color: #F5F5F5;
+  background-color: #f5f5f5;
   grid-area: left;
   display: flex;
   flex-direction: column;
@@ -54,7 +54,7 @@
       align-items: stretch !important; }
 
 .doing {
-  background-color: #F8F8F8;
+  background-color: #f8f8f8;
   grid-area: center;
   display: flex;
   flex-direction: column;
@@ -75,7 +75,7 @@
       align-items: stretch !important; }
 
 .done {
-  background-color: #F8F8F8;
+  background-color: #f8f8f8;
   grid-area: right;
   display: flex;
   flex-direction: column;
@@ -117,11 +117,11 @@ html {
     font-size: 50%; } }
 
 body {
-  font-family: 'Nunito Sans', sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   font-weight: 400;
   line-height: 1.6;
-  color: #655A56;
-  background-image: linear-gradient(to right bottom, #FBDB89, #F48982);
+  color: #655a56;
+  background-image: linear-gradient(to right bottom, #fbdb89, #f48982);
   background-size: cover;
   background-repeat: no-repeat;
   min-height: 100vh; }

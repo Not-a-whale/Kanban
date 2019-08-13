@@ -87,8 +87,8 @@ const addItem = function(title, id, elClass = "todo") {
   taskView.renderTask(state.task.title, state.task.id, elClass);
 };
 
-const fetchItems = () => {
-  fetched.asyncFetchTasks();
+const fetchItems = async () => {
+  await fetched.asyncFetchTasks();
 
   let arr = fetched.fetchedResArr;
 
