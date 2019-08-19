@@ -17,6 +17,7 @@ export const state = {
 /* Init function */
 
 const initBoard = () => {
+
   let fetchedItems = fetchFromLocalStorage();
 
   if (fetchedItems) {
@@ -110,6 +111,8 @@ export const getTaskData = eTarg => {
   }
 
   if (eTarg.classList.contains("btn-danger")) {
+    console.log(this);
+
     changedTask.deleteItemFromUI(id);
 
     deleteTask(id, elClass);
