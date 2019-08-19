@@ -20,17 +20,21 @@ const initBoard = () => {
 
   let fetchedItems = fetchFromLocalStorage();
 
-  if (fetchedItems) {
+  if (fetchedItems.todo != null) {
     fetchedItems.todo.forEach(el => {
       addItem(el.title, el.id, el.class);
-    });
+    })
+  };
+  if (fetchedItems.doing != null){
     fetchedItems.doing.forEach(el => {
       addItem(el.title, el.id, el.class);
-    });
+    })
+  };
+  if (fetchedItems.done != null){
     fetchedItems.done.forEach(el => {
       addItem(el.title, el.id, el.class);
-    });
-  }
+    })
+  };
 };
 
 /* Fetching Data */
@@ -104,14 +108,15 @@ export const getTaskData = eTarg => {
     id = eTarg.parentNode.parentNode.id;
     if (eTarg.parentNode.parentNode.parentNode.classList.contains("to-do")) {
       elClass = "todo";
-    } else {
+    } else if (eTarg.parentNode.parentNode.parentNode.classList.contains("doing")) {
       elClass = "doing";
+    } else {
+      elClass = "done";
     }
     changeState(id, elClass);
   }
 
   if (eTarg.classList.contains("btn-danger")) {
-    console.log(this);
 
     changedTask.deleteItemFromUI(id);
 
@@ -137,19 +142,9 @@ const changeState = (id, elClass) => {
 };
 
 const removeFromState = (id, elClass) => {
-  let ids, index, elem;
-
-  ids = state[elClass].map(cur => {
-    return cur.id;
-  });
-
-  if (id == "1") {
-    index = 0;
-  } else {
-    index = ids.indexOf(parseInt(10, id));
-  }
-
-  if (index !== -1) {
+  let index, elem;
+  index = state[elClass].findIndex(cur => {return cur.id == id});
+  if (index > -1) {
     elem = state[elClass].splice(index, 1)[0];
     saveToLocalStorage();
   }
